@@ -12,7 +12,6 @@ import {
   View,
   Button
 } from 'react-native';
-import PushController from './pushController';
 import PushNotification from 'react-native-push-notification';
 
 
@@ -21,19 +20,29 @@ export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      check: false
+      check: ''
     }
 
     this.handleNotify = this.handleNotify.bind(this);
   }
 
   handleNotify() {
+
+    var PushNotification = require('react-native-push-notification');
+
+    PushNotification.configure({
+      // (required) Called when a remote or local notification is opened or received
+      onNotification: function (notification) {
+        console.log('NOTIFICATION:', notification);
+      },
+    })
+
     if (this.state.check === false) {
       this.setState({
         check: true
       })
       PushNotification.localNotificationSchedule({
-        message: "My Notification Message", // (required)
+        message: "Notification", // (required)
         date: new Date(Date.now() + (1 * 1000)) // in 60 secs
       });
     }
@@ -42,7 +51,7 @@ export default class App extends Component {
         check: false
       })
     PushNotification.localNotificationSchedule({
-      message: "My Notification Message", // (required)
+      message: "Notification", // (required)
       date: new Date(Date.now() + (1 * 1000)) // in 60 secs
     });
   }
@@ -51,7 +60,7 @@ export default class App extends Component {
     return (
       <View style={styles.container}>
         <Button title='Get Notification' onPress={this.handleNotify} />
-        <PushController />
+        {/* <PushController /> */}
       </View>
     );
   }
